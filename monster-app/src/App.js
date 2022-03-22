@@ -6,24 +6,28 @@ class App extends Component {
   constructor(){
     super()
     this.state ={
-      name: {firstName: "Eva", lastName: "Tu"},
-      company: "ABC"
+      monsters: []
     }
   }
+
+componentDidMount(){
+  fetch("http://jsonplaceholder.typicode.com/users")
+  .then(resp=>resp.json())
+  .then(users => this.setState(()=>{return {monsters: users}},()=>console.log(this.state)))
+}
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>Hello {this.state.name.firstName} {this.state.name.lastName}, I work at {this.state.company}</p>
-          <button onClick={()=> this.setState(()=>{
-            return {
-              name: {firstName: "YiHui", lastName: "Tu"},
-              company: "BBC"
-            }
-            }, ()=> {console.log(this.state)})}>Change Name</button>
-        </header>
+        <input placeholder="Search Monsters..." className="search-box" tupe="search" onChange={
+          (e)=>{
+          let searchFilter = this.state.monsters.filter(monster =>  {return monster.name.toLowerCase().includes(e.target.value)})
+          this.setState(()=>{return {monsters:searchFilter}})
+        }}/>
+        {this.state.monsters.map((monster)=><h1 key={monster.id}>{monster.name}</h1>)}
+        
       </div>
+      
     );
   }
 }
