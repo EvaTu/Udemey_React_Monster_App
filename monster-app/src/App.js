@@ -15,7 +15,7 @@ class App extends Component {
 componentDidMount(){
   fetch("http://jsonplaceholder.typicode.com/users")
   .then(resp=>resp.json())
-  .then(users => this.setState(()=>{return {monsters: users}},()=>console.log(this.state)))
+  .then(users => this.setState(()=>{return {monsters: users}}))
 }
 
 onSearchChange = (e)=>{
@@ -31,6 +31,7 @@ onSearchChange = (e)=>{
 
     return (
       <div className="App">
+        <h1 className="app-title">Monsters Institute of Technology</h1>
         <SearchBox onChangeHandler={onSearchChange} placeholder="Search Monsters..." className="monster-search-box"/>
         {/* {searchFilter.map((monster)=><h1 key={monster.id}>{monster.name}</h1>)} */}
         <CardList monsters={searchFilter}/>
