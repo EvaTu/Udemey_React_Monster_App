@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useState, useEffect} from "react"
 
 import CardList from "./components/card-list/card-list.component"
 import SearchBox from "./components/search-box/serach-box.component"
@@ -10,20 +10,43 @@ import './App.css';
 
 
 function App (){
-
+  const[ monsters, setMonsters] =useState([])
   const[ search, setSearch] = useState("")
+  const[ filterArr, setFilterArr ] = useState(monsters) //setting this is because the need to use useEffect...
+  
 
-  const onSearchChange = function (e){
+
+  useEffect(()=>{
+    fetch("http://jsonplaceholder.typicode.com/users")
+   .then(resp=>resp.json())
+   .then(users => setMonsters(users))
+  }, [])
+
+  useEffect(()=>{
+    const filterData = monsters.filter(monster => monster.name.toLowerCase().includes(search))
+    setFilterArr(filterData)
+  },[monsters, search])
+  
+
+  const onSearchChange = function(e){
     let searchValue = e.target.value.toLocaleLowerCase()
     setSearch(searchValue)
   }
 
- 
+  // const onStringChange = function(e){
+  //   setString(e.target.value)
+  // }
+
+  // presenting the need to move the searchFilter inside the useEffect to prevent it keeps re-rendering...
+  // let searchFilter = monsters.filter(monster => monster.name.toLowerCase().includes(search))
+  // console.log(searchFilter)
 
   return (
     <div className="App">
       <h1 className="app-title">Monsters Institute of Technology</h1>
       <SearchBox onChangeHandler={onSearchChange} placeholder="Search Monsters..." className="monster-search-box"/>
+      {/* <SearchBox onChangeHandler={onStringChange} placeholder="Type String" /> */}
+      <CardList monsters={filterArr}/>
     </div>
   )
 }
